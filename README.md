@@ -5,7 +5,7 @@ RICO: An Enhanced Image Recaptioning Method via Visual Reconstruction
 
 <br>
 
-This is the repo for the official implementation of the paper: [RICO: Improving Accuracy and Completeness in Image Recaptioning via Visual Reconstruction]([https://arxiv.org/](https://arxiv.org/abs/2505.22613))
+This is the repo for the official implementation of the paper: [RICO: Improving Accuracy and Completeness in Image Recaptioning via Visual Reconstruction](https://arxiv.org/abs/2505.22613)
 
 ## 📆 TODO List
 - [x] Code for the full RICO pipeline.
