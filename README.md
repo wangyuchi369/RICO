@@ -5,7 +5,7 @@ RICO: An Enhanced Image Recaptioning Method via Visual Reconstruction
 
 <br>
 
-This is the repo for the official implementation of the paper: [RICO: Improving Accuracy and Completeness in Image Recaptioning via Visual Reconstruction](https://arxiv.org/)
+This is the repo for the official implementation of the paper: [RICO: Improving Accuracy and Completeness in Image Recaptioning via Visual Reconstruction]([https://arxiv.org/](https://arxiv.org/abs/2505.22613))
 
 ## 📆 TODO List
 - [x] Code for the full RICO pipeline.
@@ -104,7 +104,15 @@ parser.add_argument('--output_json_dir', type=str, default='results/records')
 ## ☕ Citation
  If you find our projects helpful to your research, please consider citing our paper:
 ```
-
+@misc{wang2025ricoimprovingaccuracycompleteness,
+      title={RICO: Improving Accuracy and Completeness in Image Recaptioning via Visual Reconstruction}, 
+      author={Yuchi Wang and Yishuo Cai and Shuhuai Ren and Sihan Yang and Linli Yao and Yuanxin Liu and Yuanxing Zhang and Pengfei Wan and Xu Sun},
+      year={2025},
+      eprint={2505.22613},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2505.22613}, 
+}
 ```
 For any issues or further discussions, feel free to contact wangyuchi369@gmail.com
 
