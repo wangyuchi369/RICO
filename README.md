@@ -9,8 +9,8 @@ This is the repo for the official implementation of the paper: [RICO: Improving 
 
 ## 📆 TODO List
 - [x] Code for the full RICO pipeline.
-- [ ] Pretrained checkpoint for RICO-Flash.
-- [ ] Training method for your own DPO-based model.
+- [x] Pretrained checkpoint for RICO-Flash.
+- [x] Training method for your own DPO-based model.
 
 ## 💡 Introduction
 
@@ -97,6 +97,102 @@ parser.add_argument('--output_video_dir', type=str, default='results/outputs')
 parser.add_argument('--output_json_dir', type=str, default='results/records')
 
 ```
+
+## ⚡ RICO-Flash Model
+**RICO-Flash** is a lightweight variant of RICO that performs the *reconstruction-and-refinement* process in a single step, substantially reducing computational overhead.  It fine-tunes the **Qwen2-VL** model using **LoRA** and **DPO (Direct Preference Optimization)**, based on [LLaMAFactory](https://github.com/hiyouga/LLaMA-Factory).
+
+---
+
+### Setup
+
+We recommend cloning the official LLaMAFactory repository and installing the required dependencies:
+
+```bash
+git clone https://github.com/hiyouga/LLaMA-Factory.git
+cd LLaMA-Factory
+pip install -r requirements.txt
+```
+
+### LoRA Checkpoint for RICO-Flash
+
+You can download and extract the trained LoRA checkpoint for RICO-Flash from [this link](https://drive.google.com/file/d/1NYv4Oo69rLIM8CuPvkcg1yZGxCWAEAHi/view?usp=sharing).
+
+After training, you may merge the LoRA adapter weights into the base Qwen2-VL model. Please refer to the [LLaMAFactory documentation](https://github.com/hiyouga/LLaMA-Factory?tab=readme-ov-file#quickstart) for details. An example command is shown below:
+
+```bash
+llamafactory-cli export examples/merge_lora/llama3_lora_sft.yaml
+```
+
+You can modify the file path in `examples/merge_lora/llama3_lora_sft.yaml` to match your configuration, then run the command to perform the merge. The final merged model will be saved to the output directory you specify.
+
+
+### Inference with the Final Model
+
+After merging the LoRA weights, you can load the final model just like a standard Qwen2-VL checkpoint:
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model = AutoModelForCausalLM.from_pretrained(
+    "path/to/merged/ckpt", trust_remote_code=True
+)
+tokenizer = AutoTokenizer.from_pretrained(
+    "path/to/merged/ckpt", trust_remote_code=True
+)
+```
+
+### Training Your Own DPO-Based Model
+
+To train your own model with **LoRA** and **DPO**, your dataset should follow the structure below. Each sample must include:
+
+* `conversations`: A dialogue that includes an `<image>` placeholder for multimodal input.
+* `images`: The local file path(s) to associated image(s).
+* `chosen` / `rejected`: Responses required for DPO training—the preferred and less preferred outputs.
+
+Example:
+
+```json
+[
+  {
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>Describe this image in detail. Your answer should be concise and informative."
+      }
+    ],
+    "images": [
+      "/path/to/image1.jpg"
+    ],
+    "chosen": {
+      "from": "gpt",
+      "value": "The preferred response here..."
+    },
+    "rejected": {
+      "from": "gpt",
+      "value": "The less preferred response here..."
+    }
+  },
+  ...
+]
+```
+
+We provide a reference configuration file, `qwen2vl_lora_dpo.yaml`, which is tailored for training Qwen2-VL with LoRA and DPO. You can modify the config file to adjust parameters such as dataset paths, model names, training epochs, batch size, and learning rates.
+
+To start multi-GPU training with LoRA and DPO, run the following command:
+
+```bash
+FORCE_TORCHRUN=1 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 \
+llamafactory-cli train qwen2vl_lora_dpo.yaml
+```
+
+> For additional configuration options, refer to the [official LLaMAFactory README](https://github.com/hiyouga/LLaMA-Factory).
+
+
+
+
+
+
+
 
 
 
