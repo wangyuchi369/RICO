@@ -1,5 +1,5 @@
 <h1 align="center">
-RICO: An Enhanced Image Recaptioning Method via Visual Reconstruction
+[EMNLP 2025] RICO: An Enhanced Image Recaptioning Method via Visual Reconstruction
 </h1>
 
 
